@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TransactionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('landing');
 });
+
+Route::resource('transactions', TransactionController::class);
+Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
+Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+Route::get('/transactions/{list}', [TransactionController::class, 'show'])->name('transactions.show');
+Route::get('/transactions/{list}/edit', [TransactionController::class, 'edit'])->name('transactions.edit');
+Route::patch('/transactions/{list}', [TransactionController::class, 'update'])->name('transactions.update');
+Route::delete('/transactions/{list}', [TransactionController::class, 'destroy'])->name('books.destroy');
