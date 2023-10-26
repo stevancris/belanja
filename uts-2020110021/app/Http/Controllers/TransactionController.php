@@ -12,7 +12,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        $transactions = Transaction::all();
+        return view('transactions.index', compact ('transactions'));
     }
 
     /**
@@ -28,7 +29,21 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         $validate = $request->validate([
+             'amount' => 'required|numeric',
+             'type' => 'required|string|max:255',
+             'category' => 'required|string|max:255',
+             'notes' => 'required|string|max:255',
+         ]);
+
+         $transaction = Transaction::create([
+             'amount' => $validate['amount'],
+             'type' => $validate['type'],
+             'category' => $validate['category'],
+             'notes' => $validate['notes'],
+         ]);
+
+        return redirect()->route('transactions.index')->with('success', 'Transaction added successfully.');
     }
 
     /**
@@ -36,7 +51,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        return view('transactions.show', compact('transaction'));
     }
 
     /**
@@ -44,7 +59,7 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        return view('transactions.edit', compact('transaction'));
     }
 
     /**
@@ -52,7 +67,21 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+         $validate = $request->validate([
+             'amount' => 'required|numeric',
+             'type' => 'required|string|max:255',
+             'category' => 'required|string|max:255',
+             'notes' => 'required|string|max:255',
+         ]);
+        
+         $transaction-> update([
+             'amount' => $validate['amount'],
+             'type' => $validate['type'],
+             'category' => $validate['category'],
+             'notes' => $validate['notes'],
+         ]);
+
+         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
     }
 
     /**
@@ -60,6 +89,7 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        $transaction->delete();
+        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully.');
     }
 }
